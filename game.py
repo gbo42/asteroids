@@ -15,11 +15,11 @@ clock = pygame.time.Clock()
 
 # game objects
 done = False
-noShip = False
 ship = Ship(250, 250, 50, GREEN)
+aQnt = 1
 shot = True
 bullets = []
-asteroids = [randomAsteroid(WIDTH, HEIGHT), randomAsteroid(WIDTH, HEIGHT)]
+asteroids = []
 
 while not done:
     clock.tick(60)
@@ -44,7 +44,17 @@ while not done:
                 shot = True
 
     if not ship.update(WIDTH, HEIGHT, asteroids):
-        noShip = True
+        ship = Ship(250, 250, 50, GREEN)
+        shot = True
+        bullets = []
+        asteroids = []
+        aQnt = 1
+
+
+    if len(asteroids) == 0:
+        aQnt *= 2
+        for i in range(aQnt):
+            asteroids.append(randomAsteroid(WIDTH, HEIGHT))
 
     for a in asteroids:
         if not a.update(WIDTH, HEIGHT, bullets):
