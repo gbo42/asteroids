@@ -1,9 +1,18 @@
 import math
 
+# colors
+GRAY = (51, 51, 51)
+YELLOW = (255, 255, 0)
+WHITE = (255, 255, 255)
+GREEN  = (0, 255, 0)
+
 class Vector:
     def __init__(self, x, y):
         self.x = x
         self.y = y
+
+    def copy(self):
+        return Vector(self.x, self.y)
 
     def norm(self):
         m = math.sqrt(self.x * self.x + self.y * self.y)

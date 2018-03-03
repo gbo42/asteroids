@@ -2,6 +2,24 @@ import pygame
 import math
 from helpers import *
 
+class Bullet:
+    def __init__(self, x, y, d, color):
+        self.x = x
+        self.y = y
+        self.ticks = pygame.time.get_ticks()
+        self.color = color
+        self.dir = d.copy()
+
+    def update(self, w, h):
+        if pygame.time.get_ticks() - self.ticks > 1000:
+            return False
+        self.x = (self.x + self.dir.x * 10) % w
+        self.y = (self.y + self.dir.y * 10) % h
+        return True
+        
+    def draw(self, screen):
+        pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), 3)
+
 class Ship:
     def __init__(self, x, y, r, color):
         self.x = x
@@ -41,3 +59,6 @@ class Ship:
 
     def draw(self, screen):
         pygame.draw.aalines(screen, self.color, True, [(p.x, p.y) for p in self.points])
+
+    def shoot(self):
+        return Bullet(self.points[2].x, self.points[2].y, self.dir, YELLOW)
