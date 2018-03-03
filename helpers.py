@@ -5,6 +5,12 @@ class Vector:
         self.x = x
         self.y = y
 
+    def norm(self):
+        m = math.sqrt(self.x * self.x + self.y * self.y)
+        self.x /= m
+        self.y /= m
+        return self
+
 def mapFromTo(x,a,b,c,d):
    y=(x-a)/(b-a)*(d-c)+c
    return y

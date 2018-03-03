@@ -36,6 +36,8 @@ while not done:
                 ship.rotate(-0.1)
 
     ship.move(WIDTH, HEIGHT)
+    asteroid.update(WIDTH, HEIGHT)
+    print(asteroid.x, asteroid.y)
 
     # render
     screen.fill(GRAY)
