@@ -9,16 +9,16 @@ class Bullet:
         self.ticks = pygame.time.get_ticks()
         self.color = color
         self.dir = d.copy()
-
+        self.rect =  pygame.Rect((int(self.x), int(self.y), 3, 3))
     def update(self, w, h):
         if pygame.time.get_ticks() - self.ticks > 1000:
             return False
         self.x = (self.x + self.dir.x * 10) % w
         self.y = (self.y + self.dir.y * 10) % h
         return True
-        
+
     def draw(self, screen):
-        pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), 3)
+        self.rect = pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), 3)
 
 class Ship:
     def __init__(self, x, y, r, color):

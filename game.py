@@ -1,6 +1,6 @@
 import pygame
 from helpers import *
-from asteroid import Asteroid
+from asteroid import *
 from ship import Ship
 
 # base setup
@@ -15,10 +15,10 @@ clock = pygame.time.Clock()
 
 # game objects
 done = False
-asteroid = Asteroid(100, 100, 50, WHITE)
 ship = Ship(250, 250, 50, GREEN)
 shot = True
 bullets = []
+asteroids = [randomAsteroid(WIDTH, HEIGHT), randomAsteroid(WIDTH, HEIGHT)]
 
 while not done:
     clock.tick(60)
@@ -43,7 +43,13 @@ while not done:
                 shot = True
 
     ship.move(WIDTH, HEIGHT)
-    asteroid.update(WIDTH, HEIGHT)
+    for a in asteroids:
+        if not a.update(WIDTH, HEIGHT, bullets):
+            if a.degree < 2:
+                asteroids.append(a.createChild())
+                asteroids.append(a.createChild())
+            asteroids.remove(a)
+
     for b in bullets:
         if not b.update(WIDTH, HEIGHT):
             bullets.remove(b)
@@ -53,7 +59,8 @@ while not done:
     ship.draw(screen)
     for b in bullets:
         b.draw(screen)
-    asteroid.draw(screen)
+    for a in asteroids:
+        a.draw(screen)
     pygame.display.flip()
 
 pygame.quit()
