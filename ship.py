@@ -25,6 +25,7 @@ class Ship:
         self.x = x
         self.y = y
         self.angle = 0
+        self.rect = pygame.Rect((0, 0, 0, 0))
         self.dir = Vector(0, 1)
         self.speed = Vector(0, 0)
         self.color = color
@@ -39,26 +40,30 @@ class Ship:
         self.dir.x = -cart.y
         self.dir.y = cart.x
 
-    def update(self):
+
+    def thrust(self):
+        self.speed.x = self.speed.x + self.dir.x
+        self.speed.y = self.speed.y + self.dir.y
+
+    def update(self, w, h, asteroids):
+        for a in asteroids:
+            if self.rect.colliderect(a.rect):
+                return False
+        self.x = (self.x + self.speed.x) % w
+        self.y = (self.y + self.speed.y) % h
+        self.speed.x *= 0.95
+        self.speed.y *= 0.95
+
         for p in range(3):
             x = self.original[p].x * math.cos(self.angle) - self.original[p].y * math.sin(self.angle)
             y = self.original[p].y * math.cos(self.angle) + self.original[p].x * math.sin(self.angle)
             self.points[p].x = self.x + x
             self.points[p].y = self.y + y
 
-    def thrust(self):
-        self.speed.x = self.speed.x + self.dir.x
-        self.speed.y = self.speed.y + self.dir.y
-
-    def move(self, w, h):
-        self.x = (self.x + self.speed.x) % w
-        self.y = (self.y + self.speed.y) % h
-        self.speed.x *= 0.95
-        self.speed.y *= 0.95
-        self.update()
+        return True
 
     def draw(self, screen):
-        pygame.draw.aalines(screen, self.color, True, [(p.x, p.y) for p in self.points])
+        self.rect = pygame.draw.aalines(screen, self.color, True, [(p.x, p.y) for p in self.points])
 
     def shoot(self):
         return Bullet(self.points[2].x, self.points[2].y, self.dir, YELLOW)

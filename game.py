@@ -15,6 +15,7 @@ clock = pygame.time.Clock()
 
 # game objects
 done = False
+noShip = False
 ship = Ship(250, 250, 50, GREEN)
 shot = True
 bullets = []
@@ -42,7 +43,9 @@ while not done:
             if event.key == pygame.K_SPACE:
                 shot = True
 
-    ship.move(WIDTH, HEIGHT)
+    if not ship.update(WIDTH, HEIGHT, asteroids):
+        noShip = True
+
     for a in asteroids:
         if not a.update(WIDTH, HEIGHT, bullets):
             if a.degree < 2:
