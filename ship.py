@@ -11,7 +11,7 @@ class Bullet:
         self.dir = d.copy()
         self.rect =  pygame.Rect((int(self.x), int(self.y), 3, 3))
     def update(self, w, h):
-        if pygame.time.get_ticks() - self.ticks > 1000:
+        if pygame.time.get_ticks() - self.ticks > 2500:
             return False
         self.x = (self.x + self.dir.x * 10) % w
         self.y = (self.y + self.dir.y * 10) % h
@@ -36,14 +36,16 @@ class Ship:
 
     def rotate(self, angle):
         self.angle = (self.angle + angle)
-        cart = polarToCart(self.angle, 1)
+        cart = polarToCart(self.angle, 0.5)
         self.dir.x = -cart.y
         self.dir.y = cart.x
 
-
     def thrust(self):
-        self.speed.x = self.speed.x + self.dir.x
-        self.speed.y = self.speed.y + self.dir.y
+        x = self.speed.x + self.dir.x
+        y = self.speed.y + self.dir.y
+        if x*x + y*y < 20:
+            self.speed.x = x
+            self.speed.y = y
 
     def update(self, w, h, asteroids):
         for a in asteroids:
@@ -66,4 +68,4 @@ class Ship:
         self.rect = pygame.draw.aalines(screen, self.color, True, [(p.x, p.y) for p in self.points])
 
     def shoot(self):
-        return Bullet(self.points[2].x, self.points[2].y, self.dir, YELLOW)
+        return Bullet(self.points[2].x, self.points[2].y, self.dir, WHITE)

@@ -41,15 +41,25 @@ class Asteroid:
         if len(self.pointsNow) > 1:
             self.rect = pygame.draw.aalines(screen, self.color, True, self.pointsNow)
 
-    def createChild(self):
-        child = Asteroid(self.x, self.y, 0, self.color, self.degree+1)
-        child.angle = self.angle
-        child.points = []
-        for p in self.points:
-            child.points.append(p/2)
+    def createChild(self, ship):
+        while True:
+            child = Asteroid(self.x, self.y, 0, self.color, self.degree+1)
+            child.angle = self.angle
+            child.points = []
+            for p in self.points:
+                child.points.append(p/2)
+            if not child.rect.colliderect(ship.rect):
+                break
         return child
 
-
-def randomAsteroid(w, h):
-    asteroid = Asteroid(random.randint(0, w), random.randint(0, h), 50, WHITE)
+def randomAsteroid(w, h, ship):
+    while True:
+        asteroid = Asteroid(random.randint(0, w), random.randint(0, h), 35, WHITE)
+        saferect = ship.rect
+        saferect.x -=50
+        saferect.y -=50
+        saferect.width += 50
+        saferect.height += 50
+        if not asteroid.rect.colliderect(saferect):
+            break
     return asteroid

@@ -4,8 +4,8 @@ from asteroid import *
 from ship import Ship
 
 # base setup
-HEIGHT = 500
-WIDTH = 500
+HEIGHT = 600
+WIDTH = 800
 
 # pygame setup
 pygame.init()
@@ -15,8 +15,8 @@ clock = pygame.time.Clock()
 
 # game objects
 done = False
-ship = Ship(250, 250, 50, GREEN)
-aQnt = 1
+ship = Ship(WIDTH/2, HEIGHT/2, 35, WHITE)
+aQnt = 0
 shot = True
 bullets = []
 asteroids = []
@@ -30,37 +30,30 @@ while not done:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 done = True
-            if event.key == pygame.K_UP:
-                ship.thrust()
-            if event.key == pygame.K_RIGHT:
-                ship.rotate(0.1)
-            if event.key == pygame.K_LEFT:
-                ship.rotate(-0.1)
-            if event.key == pygame.K_SPACE and shot:
-                shot = False
-                bullets.append(ship.shoot())
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_SPACE:
                 shot = True
 
+    if keyDown(ship, bullets, shot) == 2:
+        shot = False
+
     if not ship.update(WIDTH, HEIGHT, asteroids):
-        ship = Ship(250, 250, 50, GREEN)
+        ship = Ship(WIDTH/2, HEIGHT/2, 35, WHITE)
         shot = True
         bullets = []
         asteroids = []
-        aQnt = 1
-
+        aQnt = 0
 
     if len(asteroids) == 0:
-        aQnt *= 2
+        aQnt += 1
         for i in range(aQnt):
-            asteroids.append(randomAsteroid(WIDTH, HEIGHT))
+            asteroids.append(randomAsteroid(WIDTH, HEIGHT, ship))
 
     for a in asteroids:
         if not a.update(WIDTH, HEIGHT, bullets):
             if a.degree < 2:
-                asteroids.append(a.createChild())
-                asteroids.append(a.createChild())
+                asteroids.append(a.createChild(ship))
+                asteroids.append(a.createChild(ship))
             asteroids.remove(a)
 
     for b in bullets:
